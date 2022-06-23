@@ -7,6 +7,7 @@ Projet du MasterCamp : Un Système de Vote en Ligne
 ---> Place yourself with the cmd in client folder
 ---> Run command "npm install" to install node_modules
 ---> Then run command "npm run build" to deploy the client for production with dist folder
+### NB : Every time you apply modification to the client, run "npm run build" to apply since it is in production mode
 ```
 
 ## server
