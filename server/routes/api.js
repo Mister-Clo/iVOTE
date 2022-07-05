@@ -8,7 +8,7 @@ const saltRounds = 10
 const refreshTokens = [] //Will transfer this to database
 
 
-const sequelize = new Sequelize("bibli_efrei", "root", "",
+const sequelize = new Sequelize("ivote", "root", "",
 {
   dialect: "mysql",
   host: "localhost"
@@ -27,15 +27,18 @@ process.on('unhandledRejection', function(err) {
 
 /** Registration */
 router.post('/register',async (req,res) => {
-    const name = req.body.name
+    const prenom = req.body.prenom
+    const nom = req.body.nom
     const email = req.body.email
+    const numero_electeur = req.body.numero_electeur
+    const id_commune = parseInt(req.body.id_commune)
     const password = req.body.password
     const salt = await bcrypt.genSalt(saltRounds)
     const hash = await bcrypt.hash('"'+password+'"',salt)
 
     try{
         sequelize.authenticate()
-        await sequelize.query("SELECT * FROM user WHERE email LIKE '"+email+"'")
+        await sequelize.query("SELECT * FROM electeur WHERE email LIKE '"+email+"'")
         .then(async ([results,metadata]) => {
 
           if(results.length != 0) {
@@ -44,9 +47,9 @@ router.post('/register',async (req,res) => {
           }
           else{
             //Nous créons l'utilisateur si l'email n'est pas utilise
-            await sequelize.query("INSERT INTO `user` (`name`, `email`, `password`) VALUES ('"+ name +"','"+ email +"','"+ hash +"')")
+            await sequelize.query("INSERT INTO `electeur` (`prenom`, `nom`, `email`, `password`, `numero_electeur`,`Id_Commune` ) VALUES ('"+ prenom +"','"+ nom +"','"+ email +"','"+ hash +"','"+ numero_electeur +"','"+ id_commune +"')")
               .then(([results,metadata]) =>{
-                  res.status(200).json({results:results})
+                  res.status(201).json({results:results})
               })
             
           }
@@ -60,25 +63,29 @@ router.post('/register',async (req,res) => {
 
 /** Login */
 router.post('/login',async (req,res) => {
-    var email = req.body.email
-    var password = req.body.password
-    console.log(req.body)
-  
-    console.log(email)
-    console.log(password)
+    const numero_electeur = req.body.numero_electeur
+    const password = req.body.password
     try{
         sequelize.authenticate();
         
-        await sequelize.query("SELECT * FROM user WHERE email LIKE '"+email+"'")
+        await sequelize.query("SELECT * FROM electeur WHERE numero_electeur LIKE '"+numero_electeur+"'")
         .then(async ([results,metadata]) => {
-          //Vérificatio de l'email
-          if(results.length == 0) {res.status(404).json({message:"Password or email invalid email"})}
+          //Vérification du numero_electeur
+          if(results.length == 0) {res.status(404).json({message:"Password or elector number invalid"})}
 
           //Vérification du mot de passe
           var pwd = '"'+password+'"'
           let compare = await bcrypt.compare(pwd,results[0].password)
           if(compare){
-            const user = {id:results[0].id_user, name:results[0].name, email:results[0].email, profil:results[0].profil, role:results[0].role}
+            const user = {
+              id:results[0].Id_electeur,
+              prenom:results[0].prenom,
+              nom:results[0].nom, 
+              email:results[0].email, 
+              numero_electeur:results[0].numero_electeur, 
+              idCommune:results[0].Id_Commune, 
+              role:results[0].role
+            }
 
             /** Authentification avec JWT */
            const accessToken =  jwt.sign(user, process.env.ACCESS_TOKEN_SECRET,{ expiresIn: '30m'})
@@ -94,7 +101,7 @@ router.post('/login',async (req,res) => {
            res.status(200).json(req.session.user)
           }
           else {
-            res.status(403).json({message:"Password or email invalid password", success:0})
+            res.status(403).json({message:"Password or elector number invalid", success:0})
           }        
         })
       }
