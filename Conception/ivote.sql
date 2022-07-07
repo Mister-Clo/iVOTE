@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mar. 05 juil. 2022 à 16:11
+-- Généré le : ven. 08 juil. 2022 à 00:07
 -- Version du serveur :  10.4.13-MariaDB
 -- Version de PHP : 7.4.8
 
@@ -102,10 +102,17 @@ CREATE TABLE `electeur` (
   `nom` varchar(50) DEFAULT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `numero_electeur` int(11) NOT NULL,
-  `role` varchar(50) DEFAULT NULL,
+  `numero_electeur` varchar(255) NOT NULL,
+  `role` int(11) DEFAULT 0,
   `Id_Commune` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Déchargement des données de la table `electeur`
+--
+
+INSERT INTO `electeur` (`Id_electeur`, `prenom`, `nom`, `email`, `password`, `numero_electeur`, `role`, `Id_Commune`) VALUES
+(2, 'mario', 'bob', 'mario.bob@mail.com', '$2b$10$PgyTNX5QdrVpdaUpd2HLtOA/04mqGWTQr9aaWLf7OW2Eboopblp86', 'N256JK', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -271,7 +278,7 @@ ALTER TABLE `departement`
 -- AUTO_INCREMENT pour la table `electeur`
 --
 ALTER TABLE `electeur`
-  MODIFY `Id_electeur` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id_electeur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT pour la table `espacevote`
