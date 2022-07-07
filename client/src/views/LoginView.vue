@@ -9,39 +9,13 @@
         <form action="index.html">
           <img src="./../assets/avatar.svg" />
           <h2 class="title">Bienvenue dans iVote</h2>
+          <h3 class="title">connectez-vous pour pouvoir voter</h3>
           <div class="input-div one">
             <div class="i">
               <i class="bi bi-card-text"></i>
             </div>
             <div class="div">
-              <h5>Numero electeur</h5>
-              <input type="text" class="input" />
-            </div>
-          </div>
-          <div class="input-div one">
-            <div class="i">
-              <i class="bi bi-person"></i>
-            </div>
-            <div class="div">
-              <h5>Prenom</h5>
-              <input type="text" class="input" />
-            </div>
-          </div>
-          <div class="input-div one">
-            <div class="i">
-              <i class="bi bi-person"></i>
-            </div>
-            <div class="div">
-              <h5>Nom</h5>
-              <input type="text" class="input" />
-            </div>
-          </div>
-          <div class="input-div one">
-            <div class="i">
-              <i class="bi bi-envelope-fill"></i>
-            </div>
-            <div class="div">
-              <h5>Email</h5>
+              <h5>numero electeur</h5>
               <input type="text" class="input" />
             </div>
           </div>
@@ -50,12 +24,12 @@
               <i class="bi bi-lock"></i>
             </div>
             <div class="div">
-              <h5>Mot de pass</h5>
+              <h5>Password</h5>
               <input type="password" class="input" />
             </div>
           </div>
-
-          <input type="submit" class="btn" value="creer un compte" />
+          <a href="#">mot de pass oublié?</a>
+          <input type="submit" class="btn" value="Se connecter" />
         </form>
       </div>
     </div>
