@@ -6,17 +6,16 @@
         <img src="./../assets//bg.svg" />
       </div>
       <div class="login-content">
-        <form action="index.html">
+        <form @submit.prevent="login">
           <img src="./../assets/avatar.svg" />
           <h2 class="title">Bienvenue dans iVote</h2>
-          <h3 class="title">connectez-vous pour pouvoir voter</h3>
+          <h3 class="title">connectez-vous pour voter</h3>
           <div class="input-div one">
             <div class="i">
               <i class="bi bi-card-text"></i>
             </div>
             <div class="div">
-              <h5>numero electeur</h5>
-              <input type="text" class="input" />
+              <input placeholder="Numero electeur" v-model="numero_electeur" type="text" class="input" />
             </div>
           </div>
           <div class="input-div pass">
@@ -24,8 +23,7 @@
               <i class="bi bi-lock"></i>
             </div>
             <div class="div">
-              <h5>Password</h5>
-              <input type="password" class="input" />
+              <input placeholder="Password" v-model="password" type="password" class="input" />
             </div>
           </div>
           <a href="#">mot de pass oublié?</a>
@@ -37,7 +35,52 @@
 </template>
 
 <script>
-export default {};
+import axios from 'axios'
+import { userInfo } from '../components/userInfo.js'
+export default {
+    data : function(){
+        return{
+            //les valeurs par défaut de mes v-model
+            numero_electeur:"",
+            password:"",
+            errorMessage:"",
+            userInfo,
+            errored: false,
+        }
+    },
+    methods : {
+         async login(){
+           try {
+             // let data = JSON.stringify({email : this.email, password : this.password})
+             var body = {}
+             body.numero_electeur = this.numero_electeur
+             body.password = this.password
+             var results = await axios.post('/api/login', body)
+             userInfo.id = results.data.info.id
+             userInfo.prenom = results.data.info.prenom
+             userInfo.nom = results.data.info.nom
+             userInfo.email = results.data.info.email
+             userInfo.numero_electeur = results.data.info.numero_electeur
+             userInfo.idCommune = results.data.info.idCommune
+             userInfo.role = results.data.info.role
+             
+             this.numero_electeur = ""
+             this.password = ""
+             this.errorMessage = ""
+
+             if(results.data.message != null){
+               this.errored = true
+               this.errorMessage = results.data.message
+             }
+
+             this.$router.push({ name: 'vote'}) 
+           } catch (error) {
+             console.log(error)
+           }
+           
+        }
+    },
+}
 </script>
 
 <style>

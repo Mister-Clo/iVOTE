@@ -6,7 +6,7 @@
         <img src="./../assets//bg.svg" />
       </div>
       <div class="login-content">
-        <form action="index.html">
+        <form @submit.prevent="register">
           <img src="./../assets/avatar.svg" />
           <h2 class="title">Bienvenue dans iVote</h2>
           <div class="input-div one">
@@ -14,8 +14,19 @@
               <i class="bi bi-card-text"></i>
             </div>
             <div class="div">
-              <h5>Numero electeur</h5>
-              <input type="text" class="input" />
+              <input placeholder="Numero electeur" v-model="numero_electeur" type="text" class="input" required/>
+            </div>
+          </div>
+           <div class="input-div one">
+            <div class="i">
+              <i class="bi bi-geo-alt-fill"></i>
+            </div>
+            <div class="div">
+               <h5>Commune</h5>
+              <select v-model="id_commune" id="commune-select" required>
+                  <option value="1">VilleJuif</option>
+                  <option value="2">Etoile</option>
+              </select>
             </div>
           </div>
           <div class="input-div one">
@@ -23,8 +34,7 @@
               <i class="bi bi-person"></i>
             </div>
             <div class="div">
-              <h5>Prenom</h5>
-              <input type="text" class="input" />
+              <input placeholder="Prenom" v-model="prenom" type="text" class="input" required/>
             </div>
           </div>
           <div class="input-div one">
@@ -32,8 +42,7 @@
               <i class="bi bi-person"></i>
             </div>
             <div class="div">
-              <h5>Nom</h5>
-              <input type="text" class="input" />
+              <input placeholder="Nom" v-model="nom" type="text" class="input" required/>
             </div>
           </div>
           <div class="input-div one">
@@ -41,8 +50,7 @@
               <i class="bi bi-envelope-fill"></i>
             </div>
             <div class="div">
-              <h5>Email</h5>
-              <input type="text" class="input" />
+              <input placeholder="Email" v-model="email" type="text" class="input" required/>
             </div>
           </div>
           <div class="input-div pass">
@@ -50,12 +58,11 @@
               <i class="bi bi-lock"></i>
             </div>
             <div class="div">
-              <h5>Mot de pass</h5>
-              <input type="password" class="input" />
+              <input placeholder="Mot de passe" v-model="password" type="password" class="input" required/>
             </div>
           </div>
 
-          <input type="submit" class="btn" value="creer un compte" />
+          <input type="submit" class="btn" value="" />
         </form>
       </div>
     </div>
@@ -63,7 +70,56 @@
 </template>
 
 <script>
-export default {};
+import axios from 'axios'
+import { userInfo } from '../components/userInfo.js'
+export default {
+    data : function(){
+        return{
+            //les valeurs par défaut de mes v-model
+            prenom:"",
+            nom:"",
+            email:"",
+            numero_electeur:"",
+            id_commune:"",
+            password:"",
+            userInfo,
+            errorMessage:"",
+            errored: false
+        }
+    },
+    methods : {
+        async register(){
+           try {
+               var body = {}
+               body.prenom = this.prenom
+               body.nom = this.nom
+               body.email = this.email
+               body.numero_electeur = this.numero_electeur
+               body.id_commune = this.id_commune
+               body.password = this.password
+               
+               const result = await axios.post('/api/register',body)
+               console.log(result.data)
+               this.prenom = ""
+               this.nom = ""
+               this.email = ""
+               this.numero_electeur = ""
+               this.id_commune = ""
+               this.password = ""
+               this.errorMessage = ""  
+
+                if(result.data.message != null){
+                  this.errored = true
+                  this.errorMessage = result.message
+               }
+
+               this.router.push({ name: 'login'}) 
+           } catch (error) {
+               console.log(error)
+           }
+        }
+    }
+}
 </script>
 
 <style>

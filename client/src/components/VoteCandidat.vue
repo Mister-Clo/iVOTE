@@ -1,5 +1,13 @@
 <template>
-  <div id="pourVoter">
+
+  <div>
+    <div v-if="userInfo.id == 0">
+      <h1 id="nickname">
+        Pas autorisé
+        {{$router.push({ name: 'login'})}}
+      </h1>
+    </div>
+    <div v-else id="pourVoter">
     <div class="title-container">
       <h1 id="nickname">
         Choisissez votre candidat à l'élection présidentielle 2022
@@ -37,13 +45,17 @@
       </div>
     </div>
   </div>
+  </div>
+  
 </template>
 
 <script>
+import { userInfo } from '../components/userInfo.js'
 export default {
   name: "pourVoter",
   data() {
     return {
+      userInfo,
       candidats: [
         {
           id: 1,
